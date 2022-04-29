@@ -1,0 +1,192 @@
+/* * {
+  transition: 1;
+} */
+
+body {
+  background-color: lightgrey;
+  text-align: center;
+  position: static;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.timers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.timers__add {
+  display: flex;
+  width: 300px;
+  height: 300px;
+  margin: 25px;
+  justify-content: center;
+}
+
+.timers__add a {
+  width: 100px;
+  height: 100px;
+  margin: auto;
+  padding: 5px;
+  transition: 0.5s;
+}
+
+.timers__add a:hover {
+  transform: scale(0.9);
+  border-radius: 15px;
+  box-shadow: 5px 5px 3px #cee8fa;
+}
+
+
+
+.timers__block {
+  display: flex;
+  width: 300px;
+  height: 300px;
+  margin: 20px;
+  position: relative;
+  border: 5px solid #2d527c;
+  border-radius: 15px;
+  transition: 0.5s;
+}
+
+.timers__block:hover {
+  box-shadow: 5px 5px 3px #cee8fa;
+}
+
+.timers__block h3 {
+  display: none;
+}
+
+.timers__block__info {
+  width: 100%;
+  margin-top: 52px;
+  position: absolute;
+  z-index: 1;
+}
+
+.timers__block__info div {
+  display: flex;
+  padding: 5px 0;
+  width: 100%;
+}
+
+.timers__block div strong {
+  width: 50%;
+  /* width: 125px; */
+  padding-right: 5px;
+  text-align: right;
+}
+
+.timers__block div span {
+  width: 50%;
+  /* width: 125px; */
+  padding-left: 5px;
+  text-align: left;
+}
+
+.timers__block__info input {
+  display: none;
+}
+
+.timers__block_edit,
+.timers__block_delete,
+.timers__block_save,
+.timers__block_cancel {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  transition: 0.5s;
+}
+
+.timers__block_edit:hover,
+.timers__block_delete:hover,
+.timers__block_save:hover,
+.timers__block_cancel:hover {
+  transform: scale(0.9);
+  border-radius: 3px;
+  box-shadow: 5px 5px 3px #cee8fa;
+}
+
+.timers__block_delete {
+  top: 15px;
+  right: 15px;
+}
+
+.timers__block_edit{
+  top: 15px;
+  left: 15px;
+}
+
+.timers__block_save,
+.timers__block_cancel {
+  display: none;
+  bottom: 15px;
+}
+
+.timers__block_save {
+  left: 15px;
+}
+
+.timers__block_cancel {
+  right: 15px;
+}
+
+.timers__block h3 {
+  margin: auto;
+  color: red;
+}
+
+.radiation-image {
+  margin: auto;
+  width: 200px;
+  opacity: 0.1;
+  transition: 50ms;
+  animation: 4s linear 0s normal none infinite running radiation-image;
+  -webkit-animation: 4s linear 0s normal none infinite running radiation-image;
+}
+
+@keyframes radiation-image {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+
+
+
+
+
+/* @-webkit-keyframes radiation-image {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} */
+
+/* .radiation-image {
+  transform: rotate(45deg);
+} */
+
+
+/* .radiation-image {
+  
+  
+  transform: rotate(0deg);
+  transition-property: transform;
+  transition-duration: 4s;
+  
+  animation-iteration-count: infinite;
+}
+
+.radiation-image:first-child {
+  transform: rotate(360deg);
+} */
