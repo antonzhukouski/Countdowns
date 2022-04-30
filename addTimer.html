@@ -10,65 +10,66 @@
   <title>Add Timer</title>
 </head>
 <body>
-  <a href="./index.html">
-    <svg id="closeSvg" height="20" width="20">
-      <circle cx="10" cy="10" r="9" stroke="black" stroke-width="2" fill="red" />
-    </svg>
-  </a>
+  <a href="./index.html" id="closeSvg"></a>
+
   <h1>New Timer Settings</h1>
 
-  <div id="newTimer" class="new-timer">
-    <div class="new-timer__type">
-      <input id="timerTypeCounts" type="radio" name="timerType" checked>
-      <label for="timerTypeCounts">Counts</label>
-      <br>
-      <input id="timerTypeDose" type="radio" name="timerType">
-      <label for="timerTypeDose">Dose</label>
-    </div>
-    <div class="new-timer__settings">
-      <div id="timerTypeCountsSettings" class="new-timer__settings_counts">
-        <div class="settings-block">
-          <label>DU ID</label>
-          <input id="duIdCounts" type="text" placeholder="Enter detection unit ID">
-        </div>
-        <div class="settings-block">
-          <label>DU type</label>
-          <input id="duTypeCounts" placeholder="Enter detection unit type">
-        </div>
-        <div class="settings-block">
-          <label>CPS</label>
-          <input id="cps" placeholder="Enter CPS">
-        </div>
-        <div class="settings-block">
-          <label>Total counts</label>
-          <input id="counts" placeholder="Enter total counts">
-        </div>
-        <button id="addCountsTimer">Add counts timer</button>
+  <div class="timers">
+    <div id="newTimer" class="new-timer">
+      <div class="new-timer__type">
+        <input id="timerTypeCounts" type="radio" name="timerType" checked>
+        <label for="timerTypeCounts">Counts</label>
+        <br>
+        <input id="timerTypeDose" type="radio" name="timerType">
+        <label for="timerTypeDose">Dose</label>
       </div>
-      <div id="timerTypeDoseSettings" class="new-timer__settings_dose">
-        <div class="settings-block">
-          <label>DU ID</label>
-          <input id="duIdDose" type="text" placeholder="Enter detection unit ID">
-        </div>
-        <div class="settings-block">
-          <label>DU type</label>
-          <input id="duTypeDose" placeholder="Type of detection unit">
-        </div>
-        <div class="settings-block">
-          <label>Dose rate</label>
-          <input id="doseRate" placeholder="Enter dose rate per hour">
-        </div>
-        <div class="settings-block">
-          <label>Total dose</label>
-          <input id="dose" placeholder="Enter total dose, microsievert">
+      <div class="new-timer__settings">
+        <div id="timerTypeCountsSettings" class="new-timer__settings_counts">
+          <div class="settings-block">
+            <label>DU ID</label>
+            <input id="duIdCounts" type="text" placeholder="Enter DU ID">
+          </div>
+          <div class="settings-block">
+            <label>DU type</label>
+            <input id="duTypeCounts" placeholder="Enter DU type">
+          </div>
+          <div class="settings-block">
+            <label>CPS</label>
+            <input id="cps" placeholder="Enter CPS">
+          </div>
+          <div class="settings-block">
+            <label>Total counts</label>
+            <input id="counts" placeholder="Enter total counts">
+          </div>
+          
+          <div id="addCountsTimer" class="button-save"></div>
         </div>
         
-        <button id="addDoseTimer">Add dose timer</button>
+        <div id="timerTypeDoseSettings" class="new-timer__settings_dose">
+          <div class="settings-block">
+            <label>DU ID</label>
+            <input id="duIdDose" type="text" placeholder="Enter DU ID">
+          </div>
+          <div class="settings-block">
+            <label>DU type</label>
+            <input id="duTypeDose" placeholder="Type DU type">
+          </div>
+          <div class="settings-block">
+            <label>Dose rate</label>
+            <input id="doseRate" placeholder="Enter dose rate per hour">
+          </div>
+          <div class="settings-block">
+            <label>Total dose</label>
+            <input id="dose" placeholder="Enter total dose, microsievert">
+          </div>
+          
+          <div id="addDoseTimer" class="button-save"></div>
+
+        </div>
+        
       </div>
-      
     </div>
   </div>
   <script src="./addTimer.js"></script>
-  <!-- <script src="http://fe.it-academy.by/JQ/jquery.js"></script> -->
 </body>
 </html>

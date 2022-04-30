@@ -176,7 +176,7 @@ class Countdown {
     timeLeftStrong.textContent = "Left:";
     const timeLeftContent = timeLeft.appendChild(document.createElement("span"));
     timeLeftContent.id = this.num + "Left";
-    timeLeftContent.textContent = Math.round((this.timeEnd - Date.now())/1000);
+    timeLeftContent.textContent = Math.round((this.timeEnd - Date.now())/1000) + " seconds";
 
     const header3 = infoBlock.appendChild(document.createElement("h3"))
     header3.textContent = "Time is Over!";
@@ -205,10 +205,6 @@ class Countdown {
       GetMouseOver(del, "#2d527c");
     });
     del.setAttribute("onclick", "DeleteTimerLock(this.parentElement)");
-    // const delImage = del.appendChild(document.createElement("img"));
-    // delImage.setAttribute("src", "./Delete.svg");
-    
-    
     
     const save = newTimer.appendChild(document.createElement("a"));
     save.className = "timers__block_save";
@@ -221,11 +217,7 @@ class Countdown {
       GetMouseOver(save, "#2d527c");
     });
     save.setAttribute("onclick", "EditMeasurementUpdate(this.parentElement);event.stopPropagation()");
-    // const saveImage = save.appendChild(document.createElement("img"));
-    // saveImage.setAttribute("src", "./Save.svg");
     
-    
-
     const cancel = newTimer.appendChild(document.createElement("a"));
     cancel.className = "timers__block_cancel";
     cancel.id = this.num + "CancelButton";
@@ -237,10 +229,6 @@ class Countdown {
       GetMouseOver(cancel, "#2d527c");
     });
     cancel.setAttribute("onclick", "CancelEdit(this.parentElement)");
-    // const cancelImage = cancel.appendChild(document.createElement("img"));
-    // cancelImage.setAttribute("src", "./Cancel.svg");
-    
-    
 
     const radiationImage = newTimer.appendChild(document.createElement("img"));
     radiationImage.setAttribute("src", "./Radiation.svg");
@@ -258,7 +246,7 @@ class Countdown {
       timeLeft.style.display = 'none';
       
       let newOpacity = 0.5;
-      let delta = 0.05;
+      let delta = 0.3;
       setInterval(function () {
         newOpacity += delta;
         if (newOpacity > 0.5) {
@@ -361,6 +349,8 @@ function EditMeasurement(editingId) {
   const spans = editingId.getElementsByTagName("span");
   spans[2].style.display = "none";
   spans[3].style.display = "none";
+  spans[4].parentElement.style.display = "none";
+  editingId.getElementsByTagName("h3")[0].style.display = "none";
   let inputs = editingId.getElementsByTagName("input");
   Array.from(inputs).forEach(element => {
     element.style.display = "block";
@@ -373,19 +363,19 @@ function EditMeasurement(editingId) {
 }
 
 function EditMeasurementUpdate(editingId) {
+  debugger
   const newData = Array.from(editingId.parentElement.getElementsByTagName("input"));
   const elem = timersData.dataValue[editingId.id];
-  elem.momental = CheckValue(newData[0]);
-  elem.total = CheckValue(newData[1]);
+  elem.momental = CheckValue(newData[2]);
+  elem.total = CheckValue(newData[3]);
   let checkCounter = 0;
   checkCounter += elem.momental;
   checkCounter += elem.total;
   if (!checkCounter) {
     AddDeviceEvent('start')
-    elem.momental = parseFloat(newData[0].value);
-    elem.total = parseFloat(newData[1].value);
+    elem.momental = parseFloat(newData[2].value);
+    elem.total = parseFloat(newData[3].value);
     elem.timeEnd = Date.now() + (elem.total/elem.momental)*1000;
-    debugger
     textChanged = false;
     setTimeout(() => {
       $.ajax( {
@@ -395,7 +385,6 @@ function EditMeasurementUpdate(editingId) {
             v : JSON.stringify(timersData), p: newPassword},
         cache : false,
         success: document.location.href = './index.html',
-        // success: UpdateNewStart(editingId.parentElement),
         error : errorHandler
       }
       );
@@ -404,18 +393,16 @@ function EditMeasurementUpdate(editingId) {
 }
 
 function UpdateNewStart(el) {
-  // debugger
   let inputs = Array.from(el.getElementsByTagName("input"));
   let spans = Array.from(el.getElementsByTagName("span"));
   inputs.forEach(elem => elem.style.display = "none");
   spans.forEach(elem => elem.style.display = "block")
   let timeLeft = document.getElementById(`${el.id}TimeLeft`);
   timeLeft.style.display = "flex";
-  el.getElementsByTagName('h3')[0].style.display = "none";
+  el.getElementsByTagName('h3')[0].style.display = "block";
   let left = document.getElementById(`${el.id}Left`);
   left.textContent = timersData.dataValue[el.id].timeEnd - Date.now()
 }
-
 
 function DeleteTimerLock(deletedId) {
   delete timersData.dataValue[`${deletedId.id}`];
@@ -452,8 +439,8 @@ function CancelEdit(editingId) {
   let buttonEdit = document.getElementById(`${editingId.id}EditButton`);
   let buttonSave = document.getElementById(`${editingId.id}SaveButton`);
   let buttonCancel = document.getElementById(`${editingId.id}CancelButton`);
-  buttonEdit.parentElement.style.display = 'block'
-  buttonSave.parentElement.style.display = 'none';
+  buttonEdit.style.display = 'block'
+  buttonSave.style.display = 'none';
   buttonCancel.parentElement.style.display = 'none';
 }
 
