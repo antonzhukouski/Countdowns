@@ -176,7 +176,7 @@ class Countdown {
     timeLeftStrong.textContent = "Left:";
     const timeLeftContent = timeLeft.appendChild(document.createElement("span"));
     timeLeftContent.id = this.num + "Left";
-    timeLeftContent.textContent = Math.round((this.timeEnd - Date.now())/1000) + " seconds";
+    timeLeftContent.textContent = Math.round((this.timeEnd - Date.now())/1000);
 
     const header3 = infoBlock.appendChild(document.createElement("h3"))
     header3.textContent = "Time is Over!";
@@ -240,7 +240,6 @@ class Countdown {
       radiationImage.style.transform = `rotate(${rotateAngle}deg)`;
       return rotateAngle
     }, 50);
-    
     if (timeLeftContent.textContent <= 0) {
       header3.style.display = 'block';
       timeLeft.style.display = 'none';
@@ -350,7 +349,6 @@ function EditMeasurement(editingId) {
   spans[2].style.display = "none";
   spans[3].style.display = "none";
   spans[4].parentElement.style.display = "none";
-  editingId.getElementsByTagName("h3")[0].style.display = "none";
   let inputs = editingId.getElementsByTagName("input");
   Array.from(inputs).forEach(element => {
     element.style.display = "block";
@@ -399,7 +397,7 @@ function UpdateNewStart(el) {
   spans.forEach(elem => elem.style.display = "block")
   let timeLeft = document.getElementById(`${el.id}TimeLeft`);
   timeLeft.style.display = "flex";
-  el.getElementsByTagName('h3')[0].style.display = "block";
+  el.getElementsByTagName('h3')[0].style.display = "none";
   let left = document.getElementById(`${el.id}Left`);
   left.textContent = timersData.dataValue[el.id].timeEnd - Date.now()
 }
