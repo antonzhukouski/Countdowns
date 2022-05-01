@@ -162,8 +162,8 @@ class Countdown {
       editTotal.placeholder = "Enter counts";
     } else if (this.measure === "dose") {
       momental.id = this.num + "DoseRate";
-      momentalStrong.textContent = "Dose Rate";
-      momentalContent.textContent = this.momental + "mSv/h";
+      momentalStrong.textContent = "Dose Rate:";
+      momentalContent.textContent = this.momental + " mSv/h";
       total.id = "TotalDose";
       totalContent.textContent = this.total + " mSv";
       editMomental.placeholder = "Enter dose rate";
@@ -176,7 +176,7 @@ class Countdown {
     timeLeftStrong.textContent = "Left:";
     const timeLeftContent = timeLeft.appendChild(document.createElement("span"));
     timeLeftContent.id = this.num + "Left";
-    timeLeftContent.textContent = Math.round((this.timeEnd - Date.now())/1000);
+    timeLeftContent.textContent = Math.round((this.timeEnd - Date.now())/1000) + " seconds";
 
     const header3 = infoBlock.appendChild(document.createElement("h3"))
     header3.textContent = "Time is Over!";
@@ -191,7 +191,7 @@ class Countdown {
     newStart.addEventListener('mouseleave', e => {
       GetMouseOver(newStart, "#2d527c");
     });
-    newStart.setAttribute("onclick", "EditMeasurementLock(this.parentElement)");
+    newStart.setAttribute("onclick", "EditMeasurement(this.parentElement)");
       
 
     const del = newTimer.appendChild(document.createElement("a"));
@@ -240,12 +240,12 @@ class Countdown {
       radiationImage.style.transform = `rotate(${rotateAngle}deg)`;
       return rotateAngle
     }, 50);
-    if (timeLeftContent.textContent <= 0) {
+    if (parseInt(timeLeftContent.textContent) <= 0) {
       header3.style.display = 'block';
       timeLeft.style.display = 'none';
       
       let newOpacity = 0.5;
-      let delta = 0.3;
+      let delta = 0.03;
       setInterval(function () {
         newOpacity += delta;
         if (newOpacity > 0.5) {
@@ -323,33 +323,20 @@ function CheckValue(newData) {
   }
 }
 
-function EditMeasurementLock(editingId) {
-  newPassword = Math.random();
-  $.ajax( {
-    url : ajaxHandlerScript, 
-    type : 'POST',
-    dataType:'json',
-    data : { f : 'LOCKGET', n : dataName, p : newPassword},
-    cache : false,
-    success : EditMeasurement(editingId),
-    error : errorHandler
-  }
-  );
-}
-
 function EditMeasurement(editingId) {
   const el = timersData.dataValue[editingId.id];
   let buttonEdit = document.getElementById(`${editingId.id}EditButton`);
   let buttonSave = document.getElementById(`${editingId.id}SaveButton`);
   let buttonCancel = document.getElementById(`${editingId.id}CancelButton`);
+  const spans = editingId.getElementsByTagName("span");
+  let inputs = editingId.getElementsByTagName("input");
   buttonEdit.style.display = 'none'
   buttonSave.style.display = 'block';
   buttonCancel.style.display = 'block';
-  const spans = editingId.getElementsByTagName("span");
   spans[2].style.display = "none";
   spans[3].style.display = "none";
   spans[4].parentElement.style.display = "none";
-  let inputs = editingId.getElementsByTagName("input");
+  editingId.getElementsByTagName("h3")[0].style.display = "none";
   Array.from(inputs).forEach(element => {
     element.style.display = "block";
     element.onchange=txtChanged;
@@ -357,32 +344,31 @@ function EditMeasurement(editingId) {
     element.onpaste=txtChanged;
     element.oncut=txtChanged;
   });
-  buttonSave.setAttribute("onclick", "EditMeasurementUpdate(this.parentElement)");
 }
 
 function EditMeasurementUpdate(editingId) {
-  debugger
-  const newData = Array.from(editingId.parentElement.getElementsByTagName("input"));
+  const newData = Array.from(editingId.getElementsByTagName("input"));
   const elem = timersData.dataValue[editingId.id];
-  elem.momental = CheckValue(newData[2]);
-  elem.total = CheckValue(newData[3]);
+  elem.momental = CheckValue(newData[0]);
+  elem.total = CheckValue(newData[1]);
   let checkCounter = 0;
   checkCounter += elem.momental;
   checkCounter += elem.total;
   if (!checkCounter) {
     AddDeviceEvent('start')
-    elem.momental = parseFloat(newData[2].value);
-    elem.total = parseFloat(newData[3].value);
+    elem.momental = parseFloat(newData[0].value);
+    elem.total = parseFloat(newData[1].value);
     elem.timeEnd = Date.now() + (elem.total/elem.momental)*1000;
     textChanged = false;
     setTimeout(() => {
+      newPassword = Math.random();
       $.ajax( {
-        url : ajaxHandlerScript,
-        type : 'POST', dataType:'json',
-        data : { f : 'UPDATE', n : dataName,
-            v : JSON.stringify(timersData), p: newPassword},
+        url : ajaxHandlerScript, 
+        type : 'POST',
+        dataType:'json',
+        data : { f : 'LOCKGET', n : dataName, p : newPassword},
         cache : false,
-        success: document.location.href = './index.html',
+        success : UpdateNewStart,
         error : errorHandler
       }
       );
@@ -390,16 +376,20 @@ function EditMeasurementUpdate(editingId) {
   }
 }
 
+
+
+
 function UpdateNewStart(el) {
-  let inputs = Array.from(el.getElementsByTagName("input"));
-  let spans = Array.from(el.getElementsByTagName("span"));
-  inputs.forEach(elem => elem.style.display = "none");
-  spans.forEach(elem => elem.style.display = "block")
-  let timeLeft = document.getElementById(`${el.id}TimeLeft`);
-  timeLeft.style.display = "flex";
-  el.getElementsByTagName('h3')[0].style.display = "none";
-  let left = document.getElementById(`${el.id}Left`);
-  left.textContent = timersData.dataValue[el.id].timeEnd - Date.now()
+  $.ajax( {
+    url : ajaxHandlerScript,
+    type : 'POST', dataType:'json',
+    data : { f : 'UPDATE', n : dataName,
+        v : JSON.stringify(timersData), p: newPassword},
+    cache : false,
+    success: document.location.href = './index.html',
+    error : errorHandler
+  }
+  );
 }
 
 function DeleteTimerLock(deletedId) {
@@ -433,13 +423,23 @@ function UpdateStepDeleting() {
 }
 
 function CancelEdit(editingId) {
-  const el = timersData.dataValue[editingId.id];
   let buttonEdit = document.getElementById(`${editingId.id}EditButton`);
   let buttonSave = document.getElementById(`${editingId.id}SaveButton`);
   let buttonCancel = document.getElementById(`${editingId.id}CancelButton`);
+  const inputs = Array.from(editingId.getElementsByTagName("input"));
+  const spans = Array.from(editingId.getElementsByTagName("span"));
   buttonEdit.style.display = 'block'
   buttonSave.style.display = 'none';
-  buttonCancel.parentElement.style.display = 'none';
+  buttonCancel.style.display = 'none';
+  inputs.forEach(el => {el.style.display = "none"});
+  spans.forEach(el => {el.style.display = "block"});
+  debugger
+  if (Date.now() > timersData.dataValue[editingId.id].timeEnd) {
+    editingId.getElementsByTagName("h3")[0].style.display = "block"
+  } else {
+    document.getElementById(`${editingId.id}TimeLeft`).style.display = "flex";
+    document.getElementById(`${editingId.id}Left`).textContent += " seconds";
+  }
 }
 
 function GetTimersInfo() {

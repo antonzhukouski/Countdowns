@@ -11,22 +11,36 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phon
   device = "desktop";
 }
 
-function errorHandler(jqXHR,statusStr,errorStr) {
-  alert(statusStr+' '+errorStr);
-}
-
 function GetTimersInfo() {
-  newPassword = Math.random();
   $.ajax( {
-    url : ajaxHandlerScript, 
-    type : 'POST',
-    dataType:'json',
-    data : { f : 'LOCKGET', n : dataName, p : newPassword},
-    cache : false,
-    success : CheckTimersInfo,
+    url : ajaxHandlerScript, type : 'POST', cache : false, dataType:'json',
+    data : { f : 'READ', n : dataName },
+    success : GetData,
     error : errorHandler
   }
   );
+}
+
+function GetData(readResult) {
+  timersData = JSON.parse(readResult.result)
+};
+
+function UpdateData() {
+  $.ajax( {
+    url : ajaxHandlerScript,
+    type : 'POST', dataType:'json',
+    data : { f : 'UPDATE', n : dataName,
+      v : JSON.stringify(timersData),
+      p : newPassword },
+    cache : false,
+    success : document.location.href = './index.html',
+    error : errorHandler
+  }
+  );
+};
+
+function errorHandler(jqXHR,statusStr,errorStr) {
+  alert(statusStr+' '+errorStr);
 }
 
 function GetMouseOver(el, color) {
@@ -46,19 +60,9 @@ const addDoseTimer = document.getElementById("addDoseTimer");
 const saveImageDose = addDoseTimer.appendChild(document.createElement("img"));
 saveImageDose.setAttribute("src", "./Save.svg")
 
-function CheckTimersInfo(dataContent) {
-  if (dataContent.error) {
-    alert('Попробуйте обновить страницу через 1 минуту!')
-  } else if (dataContent.result) {
-    timersData = JSON.parse(dataContent.result);
-  } 
-}
-
-document.getElementById('addCountsTimer').onclick = function(event) {
+function CheckTypeTimer(event) {
   let target = event.target.parentElement;
-  if ((target.id === 'timerTypeCounts' || target.id === 'timerTypeDose') && target.tagName === 'INPUT') {
-    ShowNewTimerSettings()
-  } else if (target.id === 'addCountsTimer') {
+  if (target.id === 'addCountsTimer') {
     const measurementType = "counts";
     const duId = document.getElementById('duIdCounts');
     const duType = document.getElementById('duTypeCounts');
@@ -74,6 +78,9 @@ document.getElementById('addCountsTimer').onclick = function(event) {
     AddNewTimer(measurementType, duId, duType, doseRate, dose);
   }
 }
+document.getElementById("addDoseTimer").onclick = CheckTypeTimer;
+document.getElementById("addCountsTimer").onclick = CheckTypeTimer;
+document.getElementById("timerTypeSelect").onclick = ShowNewTimerSettings;
 
 function ShowNewTimerSettings() {
   let timerTypeRadio = document.getElementsByName('timerType');
@@ -141,20 +148,21 @@ function AddNewTimer (measurementType, id, duType, momental, total) {
     if (timersData.keysValue.indexOf("id" + idValue) < 0) {
       timersData.keysValue.push("id" + idValue)
     }
+
+    newPassword = Math.random();
     setTimeout (() => {
       $.ajax( {
-        url : ajaxHandlerScript,
-        type : 'POST', dataType:'json',
-        data : { f : 'UPDATE', n : dataName,
-          v : JSON.stringify(timersData),
-          p : newPassword },
+        url : ajaxHandlerScript, 
+        type : 'POST',
+        dataType:'json',
+        data : { f : 'LOCKGET', n : dataName, p : newPassword},
         cache : false,
-        success : document.location.href = './index.html',
+        success : UpdateData,
         error : errorHandler
       }
       );
     }, 500);
-  };
+  }
 }
 
 document.getElementById("newTimer").addEventListener("touchstart", HandleTouchStart, false);
